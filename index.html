@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>珍奶購買計算機（即時匯率）</title>
   <style>
     * {
@@ -58,19 +58,21 @@
       font-weight: bold;
       color: #4e342e;
       text-align: center;
+      width: 100%;
     }
 
-    .buttons {
+    .btn-group {
       display: flex;
-      justify-content: space-between;
-      gap: 10px;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
       margin-bottom: 24px;
     }
 
-    .buttons button {
-      flex: 1;
+    .btn-group button {
+      width: 100%;
       font-size: 1em;
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -79,7 +81,7 @@
       transition: background-color 0.3s ease;
     }
 
-    .buttons button:hover {
+    .btn-group button:hover {
       background-color: #b8952d;
     }
 
@@ -89,6 +91,7 @@
       color: #2e7d32;
       text-align: center;
       word-break: break-word;
+      width: 100%;
     }
   </style>
 </head>
@@ -97,14 +100,14 @@
     <h1>珍奶購買計算機（即時匯率）</h1>
 
     <label for="usdInput">💵 投入金額 (USD):</label>
-    <input type="number" id="usdInput" placeholder="例如：1" step="0.01" min="0">
+    <input type="number" id="usdInput" placeholder="例如：1" step="0.01" min="0" />
 
     <p id="exchangeRateDisplay">📈 匯率 (1 USD = ... TWD)</p>
 
-    <div class="buttons">
-      <button onclick="calculate()">計算</button>
+    <div class="btn-group">
+      <button onclick="calculate()">計算可以買幾杯珍奶</button>
       <button onclick="reset()">重設</button>
-      <button onclick="fetchExchangeRate()">更新匯率</button>
+      <button onclick="fetchExchangeRate()">重新抓匯率</button>
     </div>
 
     <div class="result" id="result"></div>
