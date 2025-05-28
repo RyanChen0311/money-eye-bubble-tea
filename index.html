@@ -1,41 +1,83 @@
-
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>金錢眼球珍珠奶茶</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>美金轉珍奶機</title>
   <style>
-    body { margin: 0; font-family: sans-serif; background: #eef; }
-    #container { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
-    #ui {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to bottom right, #fceabb, #f8b500);
+      text-align: center;
+      padding: 50px;
+      color: #333;
     }
-    .stat-item { margin: 8px 0; }
-    button { margin-top: 10px; padding: 10px 20px; font-weight: bold; }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 1.2em;
+      width: 200px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      background-color: #ff8800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    button:hover {
+      background-color: #ff9900;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 1.5em;
+    }
+    .bubble-tea {
+      font-size: 2em;
+      margin-top: 10px;
+    }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-  <div id="container">
-    <div id="ui">
-      <div class="stat-item">總美元：$<span id="totalUSD">0</span></div>
-      <div class="stat-item">總台幣：NT$<span id="totalNT">0</span></div>
-      <div class="stat-item">珍奶杯數：<span id="teaCount">0</span></div>
-      <div class="stat-item">珍珠數量：<span id="groundPearls">0</span></div>
-      <div class="stat-item">
-        投入金額：<input type="number" id="usdAmount" value="1" min="0.01" step="0.01" style="width: 80px;" />
-      </div>
-      <button id="addMoney">投入美元</button>
-      <button id="reset">重置</button>
-    </div>
-  </div>
-  <script type="module" src="main.js"></script>
+
+  <h1>💰 美金轉珍奶機 🧋</h1>
+  <p>請輸入美金金額：</p>
+  <input type="number" id="usdInput" placeholder="輸入 USD" />
+  <button onclick="convert()">轉換成珍奶</button>
+
+  <div id="result"></div>
+  <div class="bubble-tea" id="bubbleIcon"></div>
+
+  <script>
+    function convert() {
+      const usd = parseFloat(document.getElementById("usdInput").value);
+      const rate = 32; // 固定匯率
+      const bubbleTeaPrice = 65; // 一杯珍奶 65 元台幣
+
+      if (isNaN(usd) || usd <= 0) {
+        document.getElementById("result").textContent = "請輸入有效的金額";
+        document.getElementById("bubbleIcon").textContent = "";
+        return;
+      }
+
+      const twd = usd * rate;
+      const cups = Math.floor(twd / bubbleTeaPrice);
+
+      document.getElementById("result").textContent =
+        `可兌換新台幣 $${twd.toFixed(2)}，可買 ${cups} 杯珍奶`;
+
+      const bubbleIcon = "🧋".repeat(Math.min(cups, 10));
+      document.getElementById("bubbleIcon").textContent = bubbleIcon + (cups > 10 ? "..." : "");
+    }
+  </script>
+
 </body>
 </html>

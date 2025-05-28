@@ -1,41 +1,101 @@
 
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>金錢眼球珍珠奶茶</title>
-  <style>
-    body { margin: 0; font-family: sans-serif; background: #eef; }
-    #container { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
-    #ui {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-    .stat-item { margin: 8px 0; }
-    button { margin-top: 10px; padding: 10px 20px; font-weight: bold; }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-</head>
-<body>
-  <div id="container">
-    <div id="ui">
-      <div class="stat-item">總美元：$<span id="totalUSD">0</span></div>
-      <div class="stat-item">總台幣：NT$<span id="totalNT">0</span></div>
-      <div class="stat-item">珍奶杯數：<span id="teaCount">0</span></div>
-      <div class="stat-item">珍珠數量：<span id="groundPearls">0</span></div>
-      <div class="stat-item">
-        投入金額：<input type="number" id="usdAmount" value="1" min="0.01" step="0.01" style="width: 80px;" />
-      </div>
-      <button id="addMoney">投入美元</button>
-      <button id="reset">重置</button>
-    </div>
-  </div>
-  <script type="module" src="main.js"></script>
-</body>
-</html>
+// 簡約版 Three.js 金錢眼球轉換器
+import * as THREE from 'three';
+
+let scene, camera, renderer;
+let coins = [];
+let totalUSD = 0, totalNT = 0, teaCount = 0, pearlCount = 0;
+
+const USD_TO_NT = 31;
+const NT_PER_TEA = 55;
+const PEARLS_PER_TEA = 80;
+
+init();
+animate();
+
+function init() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    camera.position.z = 10;
+
+    // Emoji風格眼球
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('https://twemoji.maxcdn.com/v/latest/72x72/1f441.png');
+    const material = new THREE.SpriteMaterial({ map: texture });
+    const eye = new THREE.Sprite(material);
+    eye.scale.set(2, 2, 1);
+    eye.position.set(0, 0, 0);
+    scene.add(eye);
+
+    document.getElementById('addMoney').onclick = () => {
+        const usd = parseFloat(document.getElementById('usdAmount').value);
+        if (!isNaN(usd) && usd > 0) {
+            createCoin(usd);
+        }
+    };
+
+    document.getElementById('reset').onclick = resetAll;
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+}
+
+function createCoin(value) {
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('https://twemoji.maxcdn.com/v/latest/72x72/1f4b0.png');
+    const material = new THREE.SpriteMaterial({ map: texture });
+    const coin = new THREE.Sprite(material);
+    coin.scale.set(1, 1, 1);
+    coin.position.set((Math.random() - 0.5) * 6, 6, 0);
+    coin.userData = { value, velocityY: -0.05 };
+    scene.add(coin);
+    coins.push(coin);
+}
+
+function processCoin(value) {
+    totalUSD += value;
+    const nt = value * USD_TO_NT;
+    totalNT += nt;
+    const newPearls = Math.floor((nt / NT_PER_TEA) * PEARLS_PER_TEA);
+    pearlCount = Math.floor(totalNT / NT_PER_TEA) * PEARLS_PER_TEA + Math.floor((totalNT % NT_PER_TEA) / NT_PER_TEA * PEARLS_PER_TEA);
+    const newTeas = Math.floor(totalNT / NT_PER_TEA);
+    teaCount = newTeas;
+    updateUI();
+}
+
+function resetAll() {
+    coins.forEach(c => scene.remove(c));
+    coins = [];
+    totalUSD = 0;
+    totalNT = 0;
+    teaCount = 0;
+    pearlCount = 0;
+    updateUI();
+}
+
+function updateUI() {
+    document.getElementById('totalUSD').textContent = totalUSD.toFixed(2);
+    document.getElementById('totalNT').textContent = Math.floor(totalNT);
+    document.getElementById('teaCount').textContent = teaCount;
+    document.getElementById('groundPearls').textContent = pearlCount;
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    coins.forEach((coin, i) => {
+        coin.position.y += coin.userData.velocityY;
+        if (coin.position.y <= 0.5) {
+            processCoin(coin.userData.value);
+            scene.remove(coin);
+            coins.splice(i, 1);
+        }
+    });
+    renderer.render(scene, camera);
+}
