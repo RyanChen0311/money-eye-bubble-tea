@@ -36,7 +36,8 @@ label {
   display: block;
 }
 
-input[type="number"] {
+input[type="number"],
+select {
   width: 100%;
   padding: 10px 12px;
   font-size: 1.1em;
@@ -44,6 +45,7 @@ input[type="number"] {
   border: 2px solid #d4af37;
   border-radius: 8px;
   background-color: #fff;
+  appearance: none; /* 取消預設樣式(可選) */
 }
 
 #exchangeRateDisplay {
