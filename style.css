@@ -1,52 +1,89 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Microsoft JhengHei', sans-serif;
-  background-color: #fef9e7;
-  padding: 40px;
-  max-width: 600px;
-  margin: auto;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Microsoft JhengHei', Arial, sans-serif;
+  background-color: #fff8e1;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.container {
+  background-color: white;
+  padding: 32px 24px;
+  margin-top: 60px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
 }
 
 h1 {
   color: #6b4e16;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
+  font-size: 1.6em;
 }
 
-label, select, input {
+label {
   font-size: 1.1em;
+  margin-bottom: 8px;
   display: block;
-  margin-top: 15px;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+#exchangeRateDisplay {
+  margin-bottom: 20px;
+  font-size: 1.05em;
+  font-weight: bold;
+  color: #4e342e;
+  text-align: center;
   width: 100%;
 }
 
-input, select {
-  padding: 10px;
-  border-radius: 8px;
-  border: 2px solid #d4af37;
-  background-color: white;
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
-button {
-  margin-top: 20px;
-  margin-right: 10px;
-  padding: 10px 20px;
-  background-color: #d4af37;
+.btn-group button {
+  width: 100%;
+  font-size: 1em;
+  padding: 12px;
   border: none;
   border-radius: 8px;
-  color: white;
-  font-size: 1em;
   cursor: pointer;
+  background-color: #d4af37;
+  color: white;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #b28d28;
+.btn-group button:hover {
+  background-color: #b8952d;
 }
 
-.result, #exchangeRateDisplay {
-  margin-top: 25px;
+.result {
   font-size: 1.2em;
-  color: #2e7d32;
   font-weight: bold;
+  color: #2e7d32;
+  text-align: center;
+  word-break: break-word;
+  width: 100%;
 }

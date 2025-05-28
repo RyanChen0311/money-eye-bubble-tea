@@ -1,34 +1,37 @@
+const bubbleTeaPrice = 55;
 let currentRate = 0;
 
 async function fetchExchangeRate() {
   const rateDisplay = document.getElementById('exchangeRateDisplay');
   rateDisplay.innerText = "📈 匯率 (正在取得...)";
-
   try {
-    const res = await fetch('https://open.er-api.com/v6/latest/USD');
-    const data = await res.json();
-    currentRate = data.rates.TWD;
-    rateDisplay.innerText = `📈 匯率 (1 USD = ${currentRate.toFixed(2)} TWD)`;
-  } catch (e) {
-    rateDisplay.innerText = "❌ 無法取得匯率，請檢查網路";
+    const response = await fetch('https://open.er-api.com/v6/latest/USD');
+    const data = await response.json();
+    const rate = data.rates.TWD;
+    if (rate) {
+      currentRate = rate;
+      rateDisplay.innerText = `📈 匯率 (1 USD = ${rate.toFixed(2)} TWD)`;
+    } else {
+      rateDisplay.innerText = "❌ 匯率資料無法取得";
+    }
+  } catch (err) {
+    rateDisplay.innerText = "❌ 匯率取得失敗，請檢查網路連線。";
   }
 }
 
 function calculate() {
   const usd = parseFloat(document.getElementById('usdInput').value);
-  const drinkPrice = parseFloat(document.getElementById('drinkSelect').value);
-  const resultDiv = document.getElementById('result');
-
-  if (isNaN(usd) || usd <= 0 || currentRate === 0) {
-    resultDiv.innerText = "⚠️ 請輸入有效金額並確認匯率";
+  if (isNaN(usd) || usd < 0 || currentRate <= 0) {
+    document.getElementById('result').innerText = "⚠️ 請輸入有效金額，並確認匯率已取得。";
     return;
   }
 
   const twd = usd * currentRate;
-  const cups = Math.floor(twd / drinkPrice);
-  const change = (twd % drinkPrice).toFixed(2);
+  const cups = Math.floor(twd / bubbleTeaPrice);
+  const change = (twd % bubbleTeaPrice).toFixed(2);
 
-  resultDiv.innerText = `✅ 可以買 ${cups} 杯，剩下 ${change} 元台幣。`;
+  document.getElementById('result').innerText =
+    `✅ 可以買 ${cups} 杯珍奶，剩下 ${change} 元台幣。`;
 }
 
 function reset() {
@@ -36,10 +39,4 @@ function reset() {
   document.getElementById('result').innerText = '';
 }
 
-// 綁定事件
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('calcBtn').addEventListener('click', calculate);
-  document.getElementById('resetBtn').addEventListener('click', reset);
-  document.getElementById('reloadBtn').addEventListener('click', fetchExchangeRate);
-  fetchExchangeRate();
-});
+window.onload = fetchExchangeRate;

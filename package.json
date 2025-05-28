@@ -1,10 +1,14 @@
 {
-  "name": "bubbletea-calculator",
+  "name": "bubble-tea-calculator",
   "version": "1.0.0",
-  "description": "即時匯率 + 飲料購買計算工具",
+  "description": "計算 1 美金能買幾杯珍奶的網頁應用",
+  "main": "main.js",
   "scripts": {
     "start": "live-server"
   },
+  "author": "Ryan",
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "live-server": "^1.2.2"
   }
