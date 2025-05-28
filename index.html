@@ -2,27 +2,28 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>珍奶購買計算機（即時匯率）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>飲料購買計算機（即時匯率）</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>珍奶購買計算機（即時匯率）</h1>
+    <h1>飲料購買計算機（即時匯率）</h1>
 
     <label for="usdInput">💵 投入金額 (USD):</label>
     <input type="number" id="usdInput" placeholder="例如：1" step="0.01" min="0" />
 
-    <label for="drinkSelect">🥤 選擇飲料種類：</label>
+    <label for="drinkSelect">🥤 請選擇飲料：</label>
     <select id="drinkSelect">
-      <option value="55">珍珠奶茶 - 55元</option>
-      <option value="30">紅茶 - 30元</option>
-      <option value="60">鮮奶茶 - 60元</option>
+      <option value="30">紅茶（$30）</option>
+      <option value="55" selected>珍珠奶茶（$55）</option>
+      <option value="60">鮮奶茶（$60）</option>
     </select>
 
     <p id="exchangeRateDisplay">📈 匯率 (1 USD = ... TWD)</p>
 
     <div class="btn-group">
-      <button onclick="calculate()">計算可以買幾杯飲料</button>
+      <button onclick="calculate()">計算可以買幾杯</button>
       <button onclick="reset()">重設</button>
       <button onclick="fetchExchangeRate()">重新抓匯率</button>
     </div>
