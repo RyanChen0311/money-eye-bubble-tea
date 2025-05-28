@@ -1,83 +1,87 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>美金轉珍奶機</title>
+  <meta charset="UTF-8">
+  <title>珍奶購買計算機（即時匯率）</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(to bottom right, #fceabb, #f8b500);
-      text-align: center;
-      padding: 50px;
-      color: #333;
+      font-family: 'Arial', sans-serif;
+      padding: 30px;
+      background-color: #fffbea;
     }
     h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
+      color: #6b4e16;
     }
-    input {
-      padding: 10px;
-      font-size: 1.2em;
-      width: 200px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 10px 20px;
+    label, input, button {
       font-size: 1.1em;
-      background-color: #ff8800;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-left: 10px;
+      margin: 10px 0;
     }
-    button:hover {
-      background-color: #ff9900;
-    }
-    #result {
-      margin-top: 30px;
-      font-size: 1.5em;
-    }
-    .bubble-tea {
-      font-size: 2em;
-      margin-top: 10px;
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #007700;
     }
   </style>
 </head>
 <body>
+  <h1>珍奶購買計算機（即時匯率）</h1>
 
-  <h1>💰 美金轉珍奶機 🧋</h1>
-  <p>請輸入美金金額：</p>
-  <input type="number" id="usdInput" placeholder="輸入 USD" />
-  <button onclick="convert()">轉換成珍奶</button>
+  <label for="usdInput">投入金額 (USD): </label>
+  <input type="number" id="usdInput" placeholder="例如：1" step="0.01" min="0"><br>
 
-  <div id="result"></div>
-  <div class="bubble-tea" id="bubbleIcon"></div>
+  <p id="exchangeRateDisplay">匯率 (1 USD = ... TWD)</p>
+
+  <button onclick="calculate()">計算可以買幾杯珍奶</button>
+  <button onclick="reset()">重設</button>
+  <button onclick="fetchExchangeRate()">重新抓匯率</button>
+
+  <div class="result" id="result"></div>
 
   <script>
-    function convert() {
-      const usd = parseFloat(document.getElementById("usdInput").value);
-      const rate = 32; // 固定匯率
-      const bubbleTeaPrice = 65; // 一杯珍奶 65 元台幣
+    const bubbleTeaPrice = 55; // 每杯珍奶價格
+    let currentRate = 0;       // 儲存即時匯率
 
-      if (isNaN(usd) || usd <= 0) {
-        document.getElementById("result").textContent = "請輸入有效的金額";
-        document.getElementById("bubbleIcon").textContent = "";
+    async function fetchExchangeRate() {
+      const rateDisplay = document.getElementById('exchangeRateDisplay');
+      rateDisplay.innerText = "匯率 (正在取得...)";
+      try {
+        const response = await fetch('https://open.er-api.com/v6/latest/USD');
+        const data = await response.json();
+        const rate = data.rates.TWD;
+
+        if (rate) {
+          currentRate = rate;
+          rateDisplay.innerText = `匯率 (1 USD = ${rate.toFixed(2)} TWD)`;
+        } else {
+          rateDisplay.innerText = "匯率資料無法取得";
+        }
+      } catch (err) {
+        rateDisplay.innerText = "匯率取得失敗，請檢查網路連線。";
+      }
+    }
+
+    function calculate() {
+      const usd = parseFloat(document.getElementById('usdInput').value);
+      if (isNaN(usd) || usd < 0 || currentRate <= 0) {
+        document.getElementById('result').innerText = "請輸入有效金額，並確認匯率已取得。";
         return;
       }
 
-      const twd = usd * rate;
+      const twd = usd * currentRate;
       const cups = Math.floor(twd / bubbleTeaPrice);
+      const change = (twd % bubbleTeaPrice).toFixed(2);
 
-      document.getElementById("result").textContent =
-        `可兌換新台幣 $${twd.toFixed(2)}，可買 ${cups} 杯珍奶`;
-
-      const bubbleIcon = "🧋".repeat(Math.min(cups, 10));
-      document.getElementById("bubbleIcon").textContent = bubbleIcon + (cups > 10 ? "..." : "");
+      document.getElementById('result').innerText =
+        `可以買 ${cups} 杯珍奶，剩下 ${change} 元台幣。`;
     }
-  </script>
 
+    function reset() {
+      document.getElementById('usdInput').value = '';
+      document.getElementById('result').innerText = '';
+    }
+
+    // 頁面載入時自動取得匯率
+    window.onload = fetchExchangeRate;
+  </script>
 </body>
 </html>
