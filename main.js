@@ -1,4 +1,9 @@
-const bubbleTeaPrice = 55;
+const prices = {
+  bubbleTea: 55,
+  blackTea: 30,
+  milkTea: 60,
+};
+
 let currentRate = 0;
 
 async function fetchExchangeRate() {
@@ -21,17 +26,20 @@ async function fetchExchangeRate() {
 
 function calculate() {
   const usd = parseFloat(document.getElementById('usdInput').value);
+  const drinkType = document.getElementById('drinkSelect').value;
+  const price = prices[drinkType];
+
   if (isNaN(usd) || usd < 0 || currentRate <= 0) {
     document.getElementById('result').innerText = "⚠️ 請輸入有效金額，並確認匯率已取得。";
     return;
   }
 
   const twd = usd * currentRate;
-  const cups = Math.floor(twd / bubbleTeaPrice);
-  const change = (twd % bubbleTeaPrice).toFixed(2);
+  const cups = Math.floor(twd / price);
+  const change = (twd % price).toFixed(2);
 
   document.getElementById('result').innerText =
-    `✅ 可以買 ${cups} 杯珍奶，剩下 ${change} 元台幣。`;
+    `✅ 可以買 ${cups} 杯${document.getElementById('drinkSelect').selectedOptions[0].text.split(' - ')[0]}，剩下 ${change} 元台幣。`;
 }
 
 function reset() {
