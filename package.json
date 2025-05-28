@@ -1,12 +1,11 @@
 {
-  "name": "money_bubble",
+  "name": "bubbletea-calculator",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "即時匯率 + 飲料購買計算工具",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "live-server"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
 }

@@ -1,10 +1,52 @@
 body {
-  margin: 0;
-  overflow: hidden;
+  font-family: 'Microsoft JhengHei', sans-serif;
+  background-color: #fef9e7;
+  padding: 40px;
+  max-width: 600px;
+  margin: auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-canvas {
+h1 {
+  color: #6b4e16;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+label, select, input {
+  font-size: 1.1em;
   display: block;
-  width: 100vw;
-  height: 100vh;
+  margin-top: 15px;
+  width: 100%;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #d4af37;
+  background-color: white;
+}
+
+button {
+  margin-top: 20px;
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: #d4af37;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #b28d28;
+}
+
+.result, #exchangeRateDisplay {
+  margin-top: 25px;
+  font-size: 1.2em;
+  color: #2e7d32;
+  font-weight: bold;
 }
